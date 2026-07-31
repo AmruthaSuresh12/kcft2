@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ============================================
+   KCFT – Tailwind v4 Theme & Global Styles
+   ============================================ */
+
+/* ---------- Theme Color Variables ---------- */
+:root {
+  /* Light Theme (Warm Cream / Peach-based) (Default) */
+  --bg-primary: #fffaf9;
+  --bg-secondary: #fff0ed;
+  
+  --text-primary: #2d0a1b; /* Dark maroon */
+  --text-secondary: #590524; /* Maroon */
+  --text-muted: #8c034e; /* Burgundy */
+  
+  --border-primary: rgba(89, 5, 36, 0.08);
+  --border-hover: rgba(242, 121, 143, 0.4);
+  
+  --card-bg: #ffffff;
+  --card-hover: rgba(242, 121, 143, 0.04);
+  
+  --input-bg: #ffffff;
+  --navbar-bg: rgba(255, 250, 249, 0.85);
+  --scrollbar-thumb: #f2a29b;
+}
+
+:root.dark {
+  /* Dark Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #0f0f0f;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  
+  --border-primary: rgba(255, 255, 255, 0.05);
+  --border-hover: rgba(242, 121, 143, 0.25);
+  
+  --card-bg: rgba(255, 255, 255, 0.01);
+  --card-hover: rgba(255, 255, 255, 0.03);
+  
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --navbar-bg: rgba(10, 10, 10, 0.85);
+  --scrollbar-thumb: #1f1f1f;
+}
+
+/* ---------- Brand Theme Tokens ---------- */
+@theme {
+  --color-brand-pink: #F2798F;
+  --color-brand-maroon: #590524;
+  --color-brand-magenta: #8C034E;
+  --color-brand-peach: #F2A29B;
+  --color-brand-coral: #F29494;
+
+  /* Theme mappings mapped to CSS variables */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-primary: var(--border-primary);
+  --color-border-hover: var(--border-hover);
+  --color-card-bg: var(--card-bg);
+  --color-card-hover: var(--card-hover);
+  --color-input-bg: var(--input-bg);
+  --color-navbar-bg: var(--navbar-bg);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* ---------- Base Styles ---------- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ---------- Custom Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-pink);
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: rgba(242, 121, 143, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ---------- Logo Image Blending for Light & Dark Mode ---------- */
+.logo-blend {
+  mix-blend-mode: multiply;
+  filter: none;
+  transition: all 0.3s ease;
+}
+:root.dark .logo-blend {
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg) contrast(1.1);
+}
+
