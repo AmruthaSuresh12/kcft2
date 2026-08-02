@@ -1,5 +1,5 @@
 // Vercel Serverless Function: GET /api/gallery-media?category=Shloka Class
-// Uses Cloudinary Search API to fetch images by both asset_folder and public_id prefix
+// Uses Cloudinary Search API + f_auto,q_auto format optimization for browser compatibility (converting iPhone HEIC files to JPG/WEBP)
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, message: 'Method Not Allowed' });
@@ -21,8 +21,16 @@ export default async function handler(req, res) {
   const folder = `kcft/${category}`;
   const credentials = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
 
+  // Format Cloudinary URLs with f_auto,q_auto so iPhone HEIC / high-res images render as web-supported JPG/WEBP
+  const formatMediaUrl = (url) => {
+    if (!url) return url;
+    if (url.includes('/upload/') && !url.includes('/f_auto')) {
+      return url.replace('/upload/', '/upload/f_auto,q_auto/');
+    }
+    return url;
+  };
+
   try {
-    // Query Cloudinary Search API (matches both asset_folder and public_id prefix)
     const searchBody = JSON.stringify({
       expression: `asset_folder:"${folder}" OR public_id:"${folder}/*"`,
       max_results: 50,
@@ -42,14 +50,13 @@ export default async function handler(req, res) {
     );
 
     if (!searchRes.ok) {
-      // Fallback to legacy prefix search if search API is unavailable
       const legacyRes = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?prefix=${encodeURIComponent(folder)}&max_results=50&type=upload`,
         { headers: { Authorization: `Basic ${credentials}` } }
       );
       const legacyData = await legacyRes.json();
       const media = (legacyData.resources || []).map(r => ({
-        url: r.secure_url,
+        url: formatMediaUrl(r.secure_url),
         type: r.resource_type === 'video' ? 'video' : 'image',
         publicId: r.public_id
       }));
@@ -59,7 +66,7 @@ export default async function handler(req, res) {
 
     const searchData = await searchRes.json();
     const media = (searchData.resources || []).map(r => ({
-      url: r.secure_url,
+      url: formatMediaUrl(r.secure_url),
       type: r.resource_type === 'video' ? 'video' : 'image',
       publicId: r.public_id
     }));
