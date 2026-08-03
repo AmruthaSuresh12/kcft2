@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, Calendar, BookOpen, Send, X, CheckCircle, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { User, Mail, Phone, Calendar, BookOpen, Send, X, CheckCircle, AlertTriangle, ShieldCheck, CreditCard, MessageSquare } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Register({ isModal = false, selectedCourse = '', onClose = null }) {
+  const { t, lang } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,7 +16,7 @@ export default function Register({ isModal = false, selectedCourse = '', onClose
   });
 
   const [status, setStatus] = useState({
-    type: null, // 'success' | 'error' | null
+    type: null,
     message: ''
   });
 
@@ -31,7 +33,6 @@ export default function Register({ isModal = false, selectedCourse = '', onClose
     'Theatre Summer Camp'
   ];
 
-  // Set the selected course if passed via props
   useEffect(() => {
     if (selectedCourse) {
       setFormData(prev => ({ ...prev, course: selectedCourse }));
@@ -42,18 +43,16 @@ export default function Register({ isModal = false, selectedCourse = '', onClose
     const { name, value } = e.target;
     
     if (name === 'phone') {
-      // Allow only numbers, spaces, dashes, or parentheses
       const cleanVal = value.replace(/[^0-9\s()-]/g, '');
       setFormData(prev => ({ ...prev, [name]: cleanVal }));
       
-      // Validate phone number
       const digitsOnly = cleanVal.replace(/\D/g, '');
       if (digitsOnly.length === 0) {
-        setPhoneError('Phone number is required');
+        setPhoneError(lang === 'kn' ? 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಗತ್ಯವಿದೆ' : 'Phone number is required');
       } else if (digitsOnly.length !== 10) {
-        setPhoneError('Must be exactly 10 digits');
+        setPhoneError(lang === 'kn' ? '10 ಅಂಕೆಗಳಿರಬೇಕು' : 'Must be exactly 10 digits');
       } else if (!/^[6-9]\d{9}$/.test(digitsOnly)) {
-        setPhoneError('Must be a valid 10-digit mobile number');
+        setPhoneError(lang === 'kn' ? 'ಸಾಮಾನ್ಯ 10 ಅಂಕೆಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ' : 'Must be a valid 10-digit mobile number');
       } else {
         setPhoneError('');
       }
@@ -63,22 +62,37 @@ export default function Register({ isModal = false, selectedCourse = '', onClose
   };
 
   const handleWhatsAppRedirect = () => {
-    const trustNumber = "919900247138"; // Trust WhatsApp number
+    const trustNumber = "919448326038";
     const cleanPhone = formData.phone.replace(/\D/g, '');
-    const messageText = `Hi KCFT! I just submitted my registration form for the ${formData.course} program.
+    
+    const messageText = lang === 'kn' 
+      ? `🙏 ನಮಸ್ಕಾರ KCFT ತಂಡಕ್ಕೆ,
 
-Details:
-- Name: ${formData.name}
-- Phone entered: ${cleanPhone}
-- Preferred Mode: ${formData.mode}
+ನಾನು ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಕೋರ್ಸ್ ನೋಂದಣಿಯನ್ನು ಸಲ್ಲಿಸಿದ್ದೇನೆ:
 
-Please share the batch details and schedule!`;
+👤 ಹೆಸರು: ${formData.name}
+📱 ಫೋನ್: ${cleanPhone}
+📧 ಇಮೇಲ್: ${formData.email || 'ಲಭ್ಯವಿಲ್ಲ'}
+🎓 ಆಯ್ಕೆಮಾಡಿದ ಕೋರ್ಸ್: ${formData.course}
+📍 ಮೋಡ್: ${formData.mode || 'ಲಭ್ಯವಿಲ್ಲ'}
+
+💳 ಕೋರ್ಸ್ ಶುಲ್ಕದ UPI / ಬ್ಯಾಂಕ್ ಪಾವತಿ ವಿವರಗಳು ಮತ್ತು ಬ್ಯಾಚ್ ವೇಳಾಪಟ್ಟಿಯನ್ನು ಕಳುಹಿಸಿಕೊಡಿ. ಧನ್ಯವಾದಗಳು.`
+      : `🙏 Namaste KCFT Team,
+
+I have submitted my course registration on the website:
+
+👤 Name: ${formData.name}
+📱 Phone: ${cleanPhone}
+📧 Email: ${formData.email || 'N/A'}
+🎓 Course: ${formData.course}
+📍 Mode: ${formData.mode || 'N/A'}
+
+💳 Kindly share the UPI / Bank Payment details and batch schedule to complete my enrollment! Thank you.`;
 
     const encodedText = encodeURIComponent(messageText);
     const whatsappURL = `https://wa.me/${trustNumber}?text=${encodedText}`;
     window.open(whatsappURL, '_blank');
     
-    // Close modal if in modal mode
     if (isModal && onClose) {
       onClose();
     }
@@ -87,10 +101,9 @@ Please share the batch details and schedule!`;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Final phone check
     const digitsOnly = formData.phone.replace(/\D/g, '');
     if (digitsOnly.length !== 10 || !/^[6-9]\d{9}$/.test(digitsOnly)) {
-      setPhoneError('Please enter a valid 10-digit mobile number before registering');
+      setPhoneError(lang === 'kn' ? 'ಸಾಮಾನ್ಯ 10 ಅಂಕೆಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ' : 'Please enter a valid 10-digit mobile number before registering');
       return;
     }
 
@@ -105,7 +118,7 @@ Please share the batch details and schedule!`;
         },
         body: JSON.stringify({
           ...formData,
-          phone: digitsOnly // Send cleaned 10-digit number to server
+          phone: digitsOnly
         })
       });
 
@@ -114,20 +127,20 @@ Please share the batch details and schedule!`;
       if (response.ok) {
         setStatus({
           type: 'success',
-          message: 'Registration submitted successfully!'
+          message: lang === 'kn' ? 'ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಕೆಯಾಗಿದೆ!' : 'Registration submitted successfully!'
         });
         setShowWhatsAppPrompt(true);
       } else {
         setStatus({
           type: 'error',
-          message: data.message || 'Registration failed. Please try again.'
+          message: data.message || (lang === 'kn' ? 'ನೋಂದಣಿ ಪ್ರಕ್ರಿಯೆ ವಿಫಲವಾಗಿದೆ.' : 'Registration failed. Please try again.')
         });
       }
     } catch (err) {
       console.error('Registration Error:', err);
       setStatus({
         type: 'error',
-        message: 'Could not connect to the server. Please check your internet and try again.'
+        message: lang === 'kn' ? 'ಸರ್ವರ್ ಸಂಪರ್ಕ ಸಾಧಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ.' : 'Could not connect to the server. Please check your internet and try again.'
       });
     } finally {
       setIsSubmitting(false);
@@ -138,138 +151,145 @@ Please share the batch details and schedule!`;
     <form onSubmit={handleSubmit} className="space-y-5 text-left">
       {/* Row: Name & Email */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <User size={13} className="text-brand-pink" /> Full Name <span className="text-brand-pink">*</span>
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ಪೂರ್ಣ ಹೆಸರು *' : 'Full Name *'}
           </label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter your full name" 
-            required
-            className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm placeholder-neutral-500 focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200"
-          />
+          <div className="relative">
+            <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              type="text"
+              name="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl pl-10 pr-4 py-3 text-sm text-text-primary outline-none transition-colors"
+              placeholder={lang === 'kn' ? 'ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು' : 'e.g. Ananya Sharma'}
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <Mail size={13} className="text-brand-pink" /> Email Address <span className="text-brand-pink">*</span>
+
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ಇಮೇಲ್ ವಿಳಾಸ *' : 'Email Address *'}
           </label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="your.email@example.com" 
-            required
-            className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm placeholder-neutral-500 focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200"
-          />
+          <div className="relative">
+            <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl pl-10 pr-4 py-3 text-sm text-text-primary outline-none transition-colors"
+              placeholder="name@example.com"
+            />
+          </div>
         </div>
       </div>
 
       {/* Row: Phone & Age */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="phone" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <Phone size={13} className="text-brand-pink" /> Phone Number <span className="text-brand-pink">*</span>
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (10 ಅಂಕೆಗಳು) *' : 'Phone Number (10 digits) *'}
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-3 text-sm text-text-muted select-none">+91</span>
-            <input 
-              type="tel" 
-              id="phone" 
-              name="phone" 
+            <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              type="tel"
+              name="phone"
+              required
+              maxLength={14}
               value={formData.phone}
               onChange={handleChange}
-              placeholder="98765 43210" 
-              required
-              className={`w-full bg-input-bg border rounded-xl pl-12 pr-4 py-3 text-text-primary text-sm placeholder-neutral-500 focus:outline-none focus:bg-card-hover transition-all duration-200 ${
-                phoneError ? 'border-rose-500/50 focus:border-rose-500' : 'border-border-primary focus:border-brand-pink'
+              className={`w-full bg-input-bg border rounded-xl pl-10 pr-4 py-3 text-sm text-text-primary outline-none transition-colors ${
+                phoneError ? 'border-rose-500 focus:border-rose-500' : 'border-border-primary focus:border-brand-pink'
               }`}
+              placeholder="9876543210"
             />
           </div>
-          {phoneError ? (
-            <span className="text-xs text-rose-400 flex items-center gap-1 mt-0.5">
-              <AlertTriangle size={11} /> {phoneError}
-            </span>
-          ) : (
-            <span className="text-[10px] text-text-muted">Will be verified next. Double-check for typos.</span>
+          {phoneError && (
+            <p className="text-xs text-rose-400 mt-1.5 flex items-center gap-1 font-medium">
+              <AlertTriangle size={13} className="shrink-0" />
+              <span>{phoneError}</span>
+            </p>
           )}
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="age" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <Calendar size={13} className="text-brand-pink" /> Age of Student
+
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ವಯಸ್ಸು' : 'Age of Student'}
           </label>
-          <input 
-            type="number" 
-            id="age" 
-            name="age" 
-            value={formData.age}
-            onChange={handleChange}
-            placeholder="e.g., 8" 
-            min="1"
-            max="120"
-            className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm placeholder-neutral-500 focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200"
-          />
+          <div className="relative">
+            <Calendar size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              type="number"
+              name="age"
+              min="3"
+              max="99"
+              value={formData.age}
+              onChange={handleChange}
+              className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl pl-10 pr-4 py-3 text-sm text-text-primary outline-none transition-colors"
+              placeholder="e.g. 12"
+            />
+          </div>
         </div>
       </div>
 
       {/* Row: Course Selection & Mode */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="course" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <BookOpen size={13} className="text-brand-pink" /> Select Course <span className="text-brand-pink">*</span>
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ತರಬೇತಿ ಕೋರ್ಸ್ *' : 'Select Program *'}
           </label>
-          <select 
-            id="course" 
-            name="course" 
-            value={formData.course}
-            onChange={handleChange}
-            required
-            className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200 cursor-pointer appearance-none"
-            style={{ backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23F2798F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")`, backgroundPosition: 'right 16px center', backgroundSize: '16px', backgroundRepeat: 'no-repeat' }}
-          >
-            <option value="" disabled className="bg-bg-secondary text-neutral-500">Choose a program...</option>
-            {courses.map(c => (
-              <option key={c} value={c} className="bg-bg-secondary text-text-primary">{c}</option>
-            ))}
-          </select>
+          <div className="relative">
+            <BookOpen size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <select
+              name="course"
+              required
+              value={formData.course}
+              onChange={handleChange}
+              className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl pl-10 pr-4 py-3 text-sm text-text-primary outline-none transition-colors appearance-none cursor-pointer"
+            >
+              <option value="" disabled>{lang === 'kn' ? 'ಕೋರ್ಸ್ ಆಯ್ಕೆಮಾಡಿ' : 'Choose a program...'}</option>
+              {courses.map(c => (
+                <option key={c} value={c} className="bg-bg-primary text-text-primary">{c}</option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="mode" className="text-xs text-text-muted font-medium tracking-wide uppercase flex items-center gap-1.5">
-            <ShieldCheck size={13} className="text-brand-pink" /> Preferred Mode <span className="text-brand-pink">*</span>
+
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+            {lang === 'kn' ? 'ಕಲಿಕೆಯ ಮೋಡ್ *' : 'Preferred Mode *'}
           </label>
-          <select 
-            id="mode" 
-            name="mode" 
+          <select
+            name="mode"
+            required
             value={formData.mode}
             onChange={handleChange}
-            required
-            className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200 cursor-pointer appearance-none"
-            style={{ backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23F2798F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")`, backgroundPosition: 'right 16px center', backgroundSize: '16px', backgroundRepeat: 'no-repeat' }}
+            className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl px-4 py-3 text-sm text-text-primary outline-none transition-colors appearance-none cursor-pointer"
           >
-            <option value="" disabled className="bg-bg-secondary text-neutral-500">Choose mode...</option>
-            <option value="Online" className="bg-bg-secondary text-text-primary">Online</option>
-            <option value="Offline" className="bg-bg-secondary text-text-primary">Offline</option>
-            <option value="Both" className="bg-bg-secondary text-text-primary">Both</option>
+            <option value="" disabled>{lang === 'kn' ? 'ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ' : 'Choose mode...'}</option>
+            <option value="Offline" className="bg-bg-primary text-text-primary">Offline (Tumakuru Studio)</option>
+            <option value="Online" className="bg-bg-primary text-text-primary">Online (Live Interactive)</option>
           </select>
         </div>
       </div>
 
-      {/* Message */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="message" className="text-xs text-text-muted font-medium tracking-wide uppercase">Any Message or Questions</label>
-        <textarea 
-          id="message" 
-          name="message" 
+      {/* Additional Message */}
+      <div>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+          {lang === 'kn' ? 'ಹೆಚ್ಚಿನ ಮಾಹಿತಿ / ಪ್ರಶ್ನೆಗಳು' : 'Questions or Specific Requirements'}
+        </label>
+        <textarea
+          name="message"
+          rows={3}
           value={formData.message}
           onChange={handleChange}
-          placeholder="Tell us about your goals, prior experience, or any questions you have..." 
-          rows={3}
-          className="bg-input-bg border border-border-primary rounded-xl px-4 py-3 text-text-primary text-sm placeholder-neutral-500 focus:outline-none focus:border-brand-pink focus:bg-card-hover transition-all duration-200 resize-none"
+          className="w-full bg-input-bg border border-border-primary focus:border-brand-pink rounded-xl px-4 py-3 text-sm text-text-primary outline-none transition-colors resize-none"
+          placeholder={lang === 'kn' ? 'ನಿಮ್ಮ ಸಂದೇಶ ಇಲ್ಲಿದೆ...' : 'Any previous experience or preferred timings?'}
         />
       </div>
 
@@ -279,31 +299,51 @@ Please share the batch details and schedule!`;
         disabled={isSubmitting || !!phoneError}
         className="w-full bg-brand-pink hover:bg-transparent text-white hover:text-brand-pink font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 border border-brand-pink transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-brand-pink/20 cursor-pointer mt-2"
       >
-        {isSubmitting ? 'Registering...' : 'Register Now'}
+        {isSubmitting ? (lang === 'kn' ? 'ನೋಂದಾಯಿಸಲಾಗುತ್ತಿದೆ...' : 'Registering...') : (lang === 'kn' ? 'ನೋಂದಣಿ ಪೂರ್ಣಗೊಳಿಸಿ' : 'Register Now')}
         <Send size={16} />
       </button>
     </form>
   );
 
   const successPrompt = (
-    <div className="text-center py-6 space-y-6">
-      <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
-        <CheckCircle size={32} />
+    <div className="text-center py-4 space-y-5">
+      <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+        <CheckCircle size={30} />
       </div>
+
       <div>
-        <h3 className="text-2xl font-display font-bold text-text-primary mb-2">Registration Received!</h3>
-        <p className="text-text-secondary font-light text-sm leading-relaxed max-w-sm mx-auto">
-          We have emailed your details to our team. For instant slot confirmation and batch details, please message us directly on WhatsApp.
+        <h3 className="text-2xl font-display font-bold text-text-primary mb-1">
+          {lang === 'kn' ? 'ನೋಂದಣಿ ಸಲ್ಲಿಕೆಯಾಗಿದೆ!' : 'Registration Received!'}
+        </h3>
+        <p className="text-text-secondary font-light text-xs sm:text-sm leading-relaxed max-w-sm mx-auto">
+          {lang === 'kn' 
+            ? 'ನಿಮ್ಮ ವಿವರಗಳನ್ನು ತಂಡಕ್ಕೆ ಕಳುಹಿಸಲಾಗಿದೆ. ತರಬೇತಿ ವೇಳಾಪಟ್ಟಿ ಮತ್ತು ಪಾವತಿ ವಿವರಗಳಿಗೆ WhatsApp ನಲ್ಲಿ ಸಂಪರ್ಕಿಸಿ.'
+            : 'We have received your details. Request payment & batch details instantly on WhatsApp below.'}
         </p>
       </div>
 
-      <div className="flex flex-col gap-3 max-w-xs mx-auto">
+      {/* Payment Details Guidance Card */}
+      <div className="bg-card-bg/80 border border-emerald-500/30 p-4 rounded-2xl text-left text-xs space-y-2 shadow-inner">
+        <div className="flex items-center gap-2 font-semibold text-emerald-400">
+          <CreditCard size={16} />
+          <span>{lang === 'kn' ? 'ಪಾವತಿ ವಿವರಗಳ ಜ್ಞಾಪನೆ' : 'Payment Details & Slot Confirmation'}</span>
+        </div>
+        <p className="text-text-secondary font-light leading-relaxed">
+          {lang === 'kn'
+            ? 'GPay, PhonePe, Paytm ಅಥವಾ ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ವಿವರಗಳನ್ನು WhatsApp ಚಾಟ್‌ನಲ್ಲಿ ನೇರವಾಗಿ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ.'
+            : 'Official UPI (GPay/PhonePe) & Bank details will be shared directly on WhatsApp upon verification.'}
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2.5 max-w-xs mx-auto">
         <button 
           onClick={handleWhatsAppRedirect}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer transition-all"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer transition-all text-sm"
         >
-          💬 Confirm via WhatsApp
+          <MessageSquare size={16} />
+          <span>{lang === 'kn' ? 'WhatsApp ನಲ್ಲಿ ಪಾವತಿ ವಿವರ ಕೋರಿ' : 'Request Payment & Slot via WhatsApp'}</span>
         </button>
+        
         <button 
           onClick={() => {
             setShowWhatsAppPrompt(false);
@@ -311,9 +351,9 @@ Please share the batch details and schedule!`;
             setFormData({ name: '', email: '', phone: '', age: '', course: selectedCourse || '', mode: '', message: '' });
             if (isModal && onClose) onClose();
           }}
-          className="w-full bg-white/5 border border-border-primary hover:bg-white/10 text-text-secondary font-medium py-2.5 px-6 rounded-xl cursor-pointer transition-all text-sm"
+          className="w-full bg-white/5 border border-border-primary hover:bg-white/10 text-text-secondary font-medium py-2 px-6 rounded-xl cursor-pointer transition-all text-xs"
         >
-          Close / I will wait
+          {lang === 'kn' ? 'ಮುಚ್ಚಿ' : 'Close / I will wait'}
         </button>
       </div>
     </div>
@@ -323,8 +363,6 @@ Please share the batch details and schedule!`;
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div className="bg-bg-secondary border border-border-primary max-w-lg w-full rounded-3xl p-5 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-          
-          {/* Close Button */}
           <button 
             onClick={onClose} 
             className="absolute top-4 right-4 text-text-secondary hover:text-text-primary p-1.5 rounded-full hover:bg-white/5 transition-all cursor-pointer"
@@ -338,8 +376,12 @@ Please share the batch details and schedule!`;
           ) : (
             <>
               <div className="mb-6 text-left">
-                <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-1 block">Course Registration</span>
-                <h3 className="text-xl sm:text-2xl font-display font-bold text-text-primary">Enquire about Program</h3>
+                <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-1 block">
+                  {lang === 'kn' ? 'ತರಬೇತಿ ನೋಂದಣಿ' : 'Course Registration'}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-text-primary">
+                  {lang === 'kn' ? 'ತರಗತಿ ವಿಚಾರಣೆ & ನೋಂದಣಿ' : 'Enquire about Program'}
+                </h3>
               </div>
 
               {status.type === 'error' && (
@@ -357,7 +399,6 @@ Please share the batch details and schedule!`;
     );
   }
 
-  // Stand-alone homepage section
   return (
     <section id="register" className="py-24 bg-bg-primary relative overflow-hidden">
       <div className="absolute top-[30%] left-[-15%] w-[400px] h-[400px] bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none" />
@@ -365,18 +406,22 @@ Please share the batch details and schedule!`;
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <ScrollReveal y={20}>
-            <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">Join Us</span>
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-4">Register for a Program</h2>
+            <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">
+              {lang === 'kn' ? 'ನಮ್ಮೊಂದಿಗೆ ಸೇರಿ' : 'Join Us'}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-4">
+              {lang === 'kn' ? 'ತರಬೇತಿ ಕೋರ್ಸ್‌ಗೆ ನೋಂದಾಯಿಸಿ' : 'Register for a Program'}
+            </h2>
             <p className="text-text-secondary font-light leading-relaxed">
-              Fill out the form below and we will get back to you with batch details and schedule.
+              {lang === 'kn' 
+                ? 'ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ. ನಾವು ಬ್ಯಾಚ್ ವೇಳಾಪಟ್ಟಿ ಮತ್ತು ಪಾವತಿ ಮಾಹಿತಿಯೊಂದಿಗೆ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸುತ್ತೇವೆ.'
+                : 'Fill out the form below and we will get back to you with batch details and schedule.'}
             </p>
           </ScrollReveal>
         </div>
 
-        {/* Form container */}
         <ScrollReveal y={30} delay={0.15}>
           <div className="bg-card-bg border border-border-primary rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-sm">
             {showWhatsAppPrompt ? (
