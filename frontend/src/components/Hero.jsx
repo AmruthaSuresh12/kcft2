@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   const containerVariants = {
     hidden: {},
     visible: {
@@ -44,16 +47,20 @@ export default function Hero() {
             variants={itemVariants}
             className="inline-flex items-center gap-2 bg-card-bg border border-border-primary px-4 py-1.5 rounded-full text-brand-pink text-xs font-semibold tracking-wider uppercase w-fit mb-6 shadow-sm shadow-black/10"
           >
-            <Sparkles size={14} className="animate-pulse" />
-            Where Creativity Meets Culture
+            <Sparkles size={14} className="animate-pulse text-brand-pink" />
+            <span>{t.hero.badge}</span>
           </motion.div>
 
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
-            className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-text-primary leading-[1.1] mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-text-primary leading-[1.12] mb-6"
           >
-            Nurturing <span className="bg-gradient-to-r from-brand-pink via-brand-coral to-brand-peach bg-clip-text text-transparent">Art, Culture</span> & Holistic Growth
+            {t.hero.titleStart}{' '}
+            <span className="bg-gradient-to-r from-brand-pink via-brand-coral to-brand-peach bg-clip-text text-transparent">
+              {t.hero.titleGradient}
+            </span>{' '}
+            {t.hero.titleEnd}
           </motion.h1>
 
           {/* Description */}
@@ -61,7 +68,7 @@ export default function Hero() {
             variants={itemVariants}
             className="text-text-secondary text-lg sm:text-xl font-light leading-relaxed mb-8 max-w-xl"
           >
-            Welcome to KCFT – a vibrant cultural community where individuals of all ages come together to explore dance, yoga, theatre, and the transformative power of the arts.
+            {t.hero.description}
           </motion.p>
 
           {/* CTAs */}
@@ -73,14 +80,14 @@ export default function Hero() {
               href="#courses" 
               className="group bg-brand-pink text-white font-semibold px-8 py-3.5 rounded-full flex items-center gap-2 hover:bg-transparent hover:text-brand-pink border border-brand-pink transition-all duration-300 shadow-lg shadow-brand-pink/25"
             >
-              Explore Courses
+              {t.hero.btnCourses}
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </a>
             <a 
               href="#about" 
               className="text-text-primary font-semibold px-8 py-3.5 rounded-full border border-border-primary hover:border-border-hover hover:bg-card-hover transition-all duration-300"
             >
-              Learn More
+              {t.hero.btnLearn}
             </a>
           </motion.div>
         </motion.div>
@@ -119,22 +126,22 @@ export default function Hero() {
 
           {/* Stat Overlay 1 (Top Left) */}
           <motion.div 
-            className="absolute -top-6 -left-6 bg-bg-secondary/90 backdrop-blur-md border border-border-primary px-5 py-3 rounded-2xl shadow-xl flex flex-col pointer-events-none"
+            className="absolute -top-6 -left-6 bg-bg-secondary/90 backdrop-blur-md border border-border-primary px-5 py-3 rounded-2xl shadow-xl flex flex-col pointer-events-none text-left"
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           >
             <span className="text-2xl font-bold font-display text-text-primary">15+</span>
-            <span className="text-xs text-text-muted font-light">Years of Legacy</span>
+            <span className="text-xs text-text-muted font-light">{t.hero.yearsLegacy}</span>
           </motion.div>
 
           {/* Stat Overlay 2 (Bottom Right) */}
           <motion.div 
-            className="absolute -bottom-6 -right-6 bg-bg-secondary/90 backdrop-blur-md border border-border-primary px-5 py-3 rounded-2xl shadow-xl flex flex-col pointer-events-none"
+            className="absolute -bottom-6 -right-6 bg-bg-secondary/90 backdrop-blur-md border border-border-primary px-5 py-3 rounded-2xl shadow-xl flex flex-col pointer-events-none text-left"
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           >
             <span className="text-2xl font-bold font-display text-text-primary">200+</span>
-            <span className="text-xs text-text-muted font-light">Happy Students</span>
+            <span className="text-xs text-text-muted font-light">{t.hero.happyStudents}</span>
           </motion.div>
         </motion.div>
 

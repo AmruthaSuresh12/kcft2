@@ -1,33 +1,42 @@
 import React, { useState } from 'react';
 import ScrollReveal from './ScrollReveal';
 import { X } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Founders() {
+  const { t, lang } = useLanguage();
   const [activePhoto, setActivePhoto] = useState(null);
   const [activeName, setActiveName] = useState('');
+
   const foundersList = [
     {
-      name: 'Yelanadu Ramaiah Lakshmisha ',
+      name: lang === 'kn' ? 'ಎಲಚಗೆರೆ ರಾಮಯ್ಯ ಲಕ್ಷ್ಮೀಶ' : 'Yelanadu Ramaiah Lakshmisha',
       initial: 'Y',
-      image: '/assets/lakshmish.jpg', // Place file in public/assets/lakshmish.jpg
-      role: 'Founder President',
-      description: "Yelanadu Ramaiah Lakshmisha is the Founder President of Keerthana Creative Foundation Trust and a seasoned agri-business professional with over 25 years of experience in agricultural supply chains, contract farming, procurement, and agribusiness management. His work has taken him across Europe, the United States, Russia, Germany, Sri Lanka, Thailand, Vietnam, Malaysia, Benin, and several other countries. A passionate supporter of arts and culture, he has been actively involved in theatre since his college days and represented his institution at a National-Level Drama Competition. He is a Past President of JCI Tumkur Metro Chapter, currently serves as Secretary of the Agri Committee of the Indian Gherkin Exporters Association (IGEA), and is dedicated to promoting culture, education, wellness, and community service through Keerthana Creative Foundation Trust.",
+      image: '/assets/lakshmish.jpg',
+      role: lang === 'kn' ? 'ಸಂಸ್ಥಾಪಕ ಅಧ್ಯಕ್ಷರು' : 'Founder President',
+      description: lang === 'kn' 
+        ? "ಎಲಚಗೆರೆ ರಾಮಯ್ಯ ಲಕ್ಷ್ಮೀಶ ಅವರು ಕೀರ್ತನಾ ಕ್ರಿಯೇಟಿವ್ ಫೌಂಡೇಶನ್ ಟ್ರಸ್ಟ್‌ನ ಸಂಸ್ಥಾಪಕ ಅಧ್ಯಕ್ಷರಾಗಿದ್ದು, ಕೃಷಿ ಉದ್ಯಮ, ಗುತ್ತಿಗೆ ಕೃಷಿ ಮತ್ತು ಪೂರೈಕೆ ಸರಪಳಿ ನಿರ್ವಹಣೆಯಲ್ಲಿ 25 ಕ್ಕೂ ಹೆಚ್ಚು ವರ್ಷಗಳ ಅನುಭವ ಹೊಂದಿದ್ದಾರೆ. ಕಲೆ, ಸಂಸ್ಕೃತಿ ಹಾಗೂ ರಂಗಭೂಮಿ ಕ್ಷೇತ್ರದಲ್ಲಿ ಅಪಾರ ಆಸಕ್ತಿ ಹೊಂದಿದ್ದು, ಕಾಲೇಜು ದಿನಗಳಿಂದಲೂ ರಾಷ್ಟ್ರಮಟ್ಟದ ನಾಟಕ ಸ್ಪರ್ಧೆಗಳಲ್ಲಿ ಭಾಗವಹಿಸಿದ್ದಾರೆ. ಕೃಷಿ, ಸಾಂಸ್ಕೃತಿಕ ಪರಂಪರೆ ಮತ್ತು ಸಮಾಜ ಸೇವೆಯನ್ನು ಪೋಷಿಸುವಲ್ಲಿ KCFT ಮೂಲಕ ನಿರತರಾಗಿದ್ದಾರೆ."
+        : "Yelanadu Ramaiah Lakshmisha is the Founder President of Keerthana Creative Foundation Trust and a seasoned agri-business professional with over 25 years of experience. A passionate supporter of arts and culture, he has been actively involved in theatre since his college days and represented his institution at a National-Level Drama Competition. He is dedicated to promoting culture, education, wellness, and community service through KCFT.",
       slideDir: 30
     },
     {
-      name: 'Nagarathna K.J',
+      name: lang === 'kn' ? 'ನಾಗರತ್ನ ಕೆ.ಜೆ' : 'Nagarathna K.J',
       initial: 'N',
-      image: '/assets/nagarathna.jpg', // Place file in public/assets/nagarathna.jpg
-      role: 'Secretary & Yoga Instructor',
-      description: "A dedicated yoga practitioner and teacher specialising in traditional yoga, prenatal yoga, and Garbha Samskara. She promotes holistic well-being through ancient practices and has helped many expectant mothers achieve healthy and positive birth experiences.",
+      image: '/assets/nagarathna.jpg',
+      role: lang === 'kn' ? 'ಕಾರ್ಯದರ್ಶಿ ಮತ್ತು ಯೋಗ ಮಾರ್ಗದರ್ಶಕರು' : 'Secretary & Yoga Instructor',
+      description: lang === 'kn'
+        ? "ಸಾಂಪ್ರದಾಯಿಕ ಯೋಗ, ಪ್ರಸವಪೂರ್ವ ಯೋಗ ಮತ್ತು ಗರ್ಭ ಸಂಸ್ಕಾರ ಕ್ಷೇತ್ರದಲ್ಲಿ ನುರಿತ ಯೋಗ ಶಿಕ್ಷಕರು. ಗರ್ಭಿಣಿಯರಿಗೆ ದೈಹಿಕ ಮತ್ತು ಮಾನಸಿಕ ಕ್ಷೇಮವನ್ನು ನೀಡುವ ಮೂಲಕ ಅನೇಕ ತಾಯಂದಿರಿಗೆ ಸುಲಭ ಹಾಗೂ ಸಕಾರಾತ್ಮಕ ಪ್ರಸವ ಅನುಭವವನ್ನು ನೀಡಲು ಶ್ರಮಿಸುತ್ತಿದ್ದಾರೆ."
+        : "A dedicated yoga practitioner and teacher specialising in traditional yoga, prenatal yoga, and Garbha Samskara. She promotes holistic well-being through ancient practices and has helped many expectant mothers achieve healthy and positive birth experiences.",
       slideDir: 30
     },
     {
-      name: 'Keerthana Y.L',
+      name: lang === 'kn' ? 'ಕೀರ್ತನಾ ವೈ.ಎಲ್' : 'Keerthana Y.L',
       initial: 'K',
-      image: '/assets/keerthana.png', // Pointing to the uploaded PNG image
-      role: 'Trustee , Dance Instructor & Counsellor',
-      description: "A seasoned psychologist with a Master’s degree in Clinical Psychology and certified training in psychotherapy and counselling. Alongside her work in mental wellness, she is a television actress and serial artist with a passion for the performing arts. She also leads dance classes across multiple styles, blending creativity with compassionate mental health support.",
+      image: '/assets/keerthana.png',
+      role: lang === 'kn' ? 'ಧರ್ಮದರ್ಶಿಗಳು, ನೃತ್ಯ ಮಾರ್ಗದರ್ಶಕರು ಮತ್ತು ಆಪ್ತಸಮಾಲೋಚಕರು' : 'Trustee, Dance Instructor & Counsellor',
+      description: lang === 'kn'
+        ? "ಕ್ಲಿನಿಕಲ್ ಮನೋವಿಜ್ಞಾನದಲ್ಲಿ ಸ್ನಾತಕೋತ್ತರ ಪದವಿ (M.A. Clinical Psychology) ಪಡೆದಿರುವ ಕೀರ್ತನಾ ವೈ.ಎಲ್ ಅವರು ನುರಿತ ಮನೋವಿಜ್ಞಾನಿ ಮತ್ತು ಅಭಿನೇತ್ರಿಯಾಗಿದ್ದಾರೆ. ನೃತ್ಯ ಶಿಕ್ಷಕಿಯಾಗಿ ವಿವಿಧ ಶೈಲಿಯ ನೃತ್ಯ ತರಬೇತಿ ನೀಡುತ್ತಾ, ಮಾನಸಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಕಲಾತ್ಮಕ ಸೃಜನಶೀಲತೆಯನ್ನು ಒಟ್ಟಿಗೆ ಪೋಷಿಸುತ್ತಿದ್ದಾರೆ."
+        : "A seasoned psychologist with a Master’s degree in Clinical Psychology and certified training in psychotherapy and counselling. Alongside her work in mental wellness, she is a television actress and serial artist with a passion for the performing arts. She leads dance classes and blends creativity with mental health support.",
       slideDir: 30
     },
   ];
@@ -39,10 +48,14 @@ export default function Founders() {
         {/* Section Title */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <ScrollReveal y={20}>
-            <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">Our Leadership</span>
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-4">Meet the Founders</h2>
+            <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">
+              {t.founders.subtitle}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-4">
+              {t.founders.title}
+            </h2>
             <p className="text-text-secondary font-light leading-relaxed">
-              The passionate individuals behind KCFT's mission and vision.
+              {t.founders.description}
             </p>
           </ScrollReveal>
         </div>
@@ -50,14 +63,13 @@ export default function Founders() {
         {/* Founders Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {foundersList.map((founder, idx) => {
-            // If it is the third item, make it span 2 columns on tablet md size, and center it
             const gridClass = idx === 2
               ? "md:col-span-2 md:max-w-[450px] md:mx-auto lg:col-span-1 lg:max-w-none w-full"
               : "w-full";
 
             return (
               <ScrollReveal
-                key={founder.name}
+                key={idx}
                 y={25}
                 delay={idx * 0.15}
                 className={gridClass}
@@ -121,7 +133,6 @@ export default function Founders() {
           className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer animate-in fade-in duration-200"
           onClick={() => setActivePhoto(null)}
         >
-          {/* Close button */}
           <button
             className="absolute top-6 right-6 text-white/70 hover:text-white transition-all p-2 rounded-full hover:bg-white/10 cursor-pointer"
             onClick={() => setActivePhoto(null)}
@@ -129,17 +140,15 @@ export default function Founders() {
             <X size={28} />
           </button>
 
-          {/* Zoom Card */}
           <div
             className="relative max-w-sm sm:max-w-md w-full aspect-square rounded-3xl overflow-hidden shadow-2xl border border-white/10 p-2 bg-neutral-900/40 flex items-center justify-center animate-in zoom-in-95 duration-200 cursor-default"
-            onClick={(e) => e.stopPropagation()} // Prevent close on clicking the image itself
+            onClick={(e) => e.stopPropagation()}
           >
             <img
               src={activePhoto}
               alt={activeName}
               className="w-full h-full object-cover rounded-2xl"
             />
-            {/* Title Caption overlay */}
             <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2.5 rounded-2xl text-left border border-white/5">
               <h4 className="font-display font-semibold text-white text-base">{activeName}</h4>
             </div>

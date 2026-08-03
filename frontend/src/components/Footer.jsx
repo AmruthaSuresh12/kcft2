@@ -1,7 +1,10 @@
 import React from 'react';
 import { Instagram, Youtube, Mail, ChevronUp } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -21,12 +24,12 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-8">
-          <a href="#home" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Home</a>
-          <a href="#about" className="text-text-secondary hover:text-text-primary text-sm transition-colors">About</a>
-          <a href="#courses" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Courses</a>
-          <a href="#gallery" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Gallery</a>
-          <a href="#testimonials" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Testimonials</a>
-          <a href="#contact" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Contact</a>
+          <a href="#home" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.home}</a>
+          <a href="#about" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.about}</a>
+          <a href="#courses" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.courses}</a>
+          <a href="#gallery" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.gallery}</a>
+          <a href="#testimonials" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.reviews}</a>
+          <a href="#contact" className="text-text-secondary hover:text-text-primary text-sm transition-colors">{t.nav.contact}</a>
         </div>
 
         <div className="flex items-center gap-5 mb-8">
@@ -63,7 +66,7 @@ export default function Footer() {
         {/* Copyright & Scroll Top Button */}
         <div className="w-full flex flex-col sm:flex-row items-center justify-between text-text-muted text-xs mt-4 gap-4">
           <span className="font-light text-center sm:text-left">
-            &copy; {new Date().getFullYear()} Keerthana Creative Foundation Trust. All rights reserved.
+            &copy; {new Date().getFullYear()} {t.footer.rights}
           </span>
 
           <button 
@@ -76,7 +79,7 @@ export default function Footer() {
           </button>
         </div>
 
-        {/* Designer Credit at the absolute bottom */}
+        {/* Designer Credit */}
         <div className="w-full flex justify-center sm:justify-end text-text-secondary text-[11px] font-normal mt-4 pt-4 border-t border-border-primary/30">
           <div className="flex flex-col items-center sm:items-end">
             <span>designed by <strong className="text-text-primary font-semibold">Amrutha S</strong></span>

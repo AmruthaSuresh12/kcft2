@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useInView, animate } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
+import { useLanguage } from '../context/LanguageContext';
 
 function StatCounter({ to, suffix = "", duration = 2 }) {
   const [count, setCount] = useState(0);
@@ -27,11 +28,13 @@ function StatCounter({ to, suffix = "", duration = 2 }) {
 }
 
 export default function Stats() {
+  const { t } = useLanguage();
+
   const statsList = [
-    { label: 'Happy Students', to: 200, suffix: '+' },
-    { label: 'Theatre Productions', to: 7, suffix: '' },
-    { label: 'Programs Offered', to: 6, suffix: '' },
-    { label: 'Years of Excellence', to: 15, suffix: '+' }
+    { label: t.stats.stat2Label, to: 200, suffix: '+' },
+    { label: t.stats.stat4Label, to: 50, suffix: '+' },
+    { label: t.stats.stat3Label, to: 5, suffix: '+' },
+    { label: t.stats.stat1Label, to: 15, suffix: '+' }
   ];
 
   return (
@@ -40,10 +43,10 @@ export default function Stats() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {statsList.map((stat, idx) => (
-            <ScrollReveal key={stat.label} y={20} delay={idx * 0.1}>
+            <ScrollReveal key={idx} y={20} delay={idx * 0.1}>
               <div className="flex flex-col items-center justify-center text-center p-6 rounded-2xl bg-card-bg border border-border-primary shadow-md hover:border-border-hover transition-all duration-300">
                 <StatCounter to={stat.to} suffix={stat.suffix} />
-                <span className="text-text-muted text-sm font-light mt-2 tracking-wide uppercase">
+                <span className="text-text-muted text-xs sm:text-sm font-light mt-2 tracking-wide uppercase">
                   {stat.label}
                 </span>
               </div>

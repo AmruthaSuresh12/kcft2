@@ -2,9 +2,17 @@ import React from 'react';
 import ScrollReveal from './ScrollReveal';
 import { CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function About() {
-  const features = [
+  const { t, lang } = useLanguage();
+
+  const features = lang === 'kn' ? [
+    'ಆನ್‌ಲೈನ್ ಮತ್ತು ಆಫ್‌ಲೈನ್',
+    'ಎಲ್ಲಾ ವಯೋಮಾನದವರಿಗೆ',
+    'ವ್ಯಕ್ತಿಗತ ವಿಶೇಷ ತರಬೇತಿ',
+    'ನುರಿತ ಅನುಭವಿ ಮಾರ್ಗದರ್ಶಕರು'
+  ] : [
     'Online & Offline',
     'All Age Groups',
     'Personalised Sessions',
@@ -34,15 +42,14 @@ export default function About() {
                   duration: 3,
                   repeat: Infinity,
                   ease: "easeInOut",
-                  delay: 0.7 // Stagger slightly from the Hero image animation
+                  delay: 0.7
                 }}
               >
                 <img
                   src="/assets/dance-performance.png"
-                  alt="KCFT Dance Performance"
+                  alt="KCFT Cultural Performance"
                   className="w-full h-auto object-cover rounded-2xl filter brightness-95"
                 />
-                {/* Decorative background shape */}
                 <div className="absolute -z-10 -bottom-6 -left-6 w-32 h-32 bg-brand-pink/20 rounded-full blur-2xl pointer-events-none" />
               </motion.div>
             </ScrollReveal>
@@ -51,24 +58,24 @@ export default function About() {
           {/* Right Side - Content */}
           <div className="lg:col-span-7 text-left flex flex-col justify-center">
             <ScrollReveal y={25} delay={0.1}>
-              <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">Our Story</span>
-              <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-6">About KCFT</h2>
+              <span className="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-3 block">
+                {t.about.subtitle}
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-6">
+                {t.about.title}
+              </h2>
             </ScrollReveal>
 
             <ScrollReveal y={25} delay={0.2}>
               <p className="text-xl font-light text-brand-coral/90 italic border-l-2 border-brand-pink pl-4 py-1 mb-6 leading-relaxed">
-                "Where creativity and culture converge to inspire, educate, and celebrate the arts."
+                "{t.hero.badge}"
               </p>
             </ScrollReveal>
 
             <ScrollReveal y={25} delay={0.3}>
               <div className="space-y-4 text-text-secondary text-base font-light leading-relaxed mb-8">
-                <p>
-                  At KCFT, we are dedicated to fostering a vibrant cultural community where individuals of all ages and backgrounds can come together to explore the realms of dance, yoga, Garbha Samskara, tabla, and theatre.
-                </p>
-                <p>
-                  Our foundation is rooted in a deep passion for the arts and a commitment to preserving and promoting our cultural heritage. We offer a wide range of programs and initiatives designed to ignite your creative spirit and nurture your artistic talents.
-                </p>
+                <p>{t.about.p1}</p>
+                <p>{t.about.p2}</p>
               </div>
             </ScrollReveal>
 

@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Menu, X, Sun, Moon, Languages } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar() {
+  const { lang, toggleLanguage, t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'light';
   });
-  const [lang, setLang] = useState('en');
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -33,31 +34,13 @@ export default function Navbar() {
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
-  const triggerTranslate = (targetLang) => {
-    const tryTranslate = (attempts = 0) => {
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        select.value = targetLang;
-        select.dispatchEvent(new Event('change'));
-        setLang(targetLang === 'en' ? 'en' : 'kn');
-      } else if (attempts < 10) {
-        setTimeout(() => tryTranslate(attempts + 1), 300);
-      }
-    };
-    tryTranslate();
-  };
-
-  const toggleLang = () => {
-    triggerTranslate(lang === 'en' ? 'kn' : 'en');
-  };
-
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Courses', href: '#courses' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Reviews', href: '#testimonials' },
-    { name: 'Founders', href: '#founders' },
+    { name: t.nav.home, href: '#home' },
+    { name: t.nav.about, href: '#about' },
+    { name: t.nav.courses, href: '#courses' },
+    { name: t.nav.gallery, href: '#gallery' },
+    { name: t.nav.reviews, href: '#testimonials' },
+    { name: t.nav.founders, href: '#founders' },
   ];
 
   const scrolledBg = theme === 'dark'
@@ -98,178 +81,203 @@ export default function Navbar() {
           zIndex: 99999,
           display: 'flex',
           flexDirection: 'column',
-          padding: '80px 24px 32px 24px',
-          boxShadow: '-8px 0 32px rgba(0,0,0,0.18)',
+          padding: '24px',
+          boxShadow: '-8px 0 32px rgba(0,0,0,0.4)',
           transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease',
-          overflowY: 'auto',
+          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        {/* Close button */}
-        <button
-          onClick={() => setIsMenuOpen(false)}
-          aria-label="Close menu"
-          style={{
-            position: 'absolute',
-            top: '18px',
-            right: '18px',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: drawerTextColor,
-            padding: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <X size={24} />
-        </button>
-
-        {/* Nav links */}
-        {navLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.href}
+        {/* Drawer Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src="/assets/logo.png" alt="KCFT Logo" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+            <span style={{ fontWeight: 700, fontSize: '15px', color: drawerTextColor, fontFamily: 'serif' }}>KCFT</span>
+          </div>
+          <button
             onClick={() => setIsMenuOpen(false)}
             style={{
+              marginLeft: 'auto',
+              background: 'none',
+              border: 'none',
               color: drawerTextColor,
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '500',
-              padding: '14px 0',
-              borderBottom: drawerBorderItem,
-              display: 'block',
-              transition: 'color 0.2s',
+              cursor: 'pointer',
+              padding: '4px',
+              borderRadius: '50%',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#F2798F'}
-            onMouseLeave={e => e.currentTarget.style.color = drawerTextColor}
           >
-            {link.name}
-          </a>
-        ))}
+            <X size={22} />
+          </button>
+        </div>
 
-        {/* Contact button */}
-        <a
-          href="#contact"
-          onClick={() => setIsMenuOpen(false)}
-          style={{
-            marginTop: '24px',
-            backgroundColor: '#F2798F',
-            color: '#ffffff',
-            textAlign: 'center',
-            fontWeight: '600',
-            padding: '12px 0',
-            borderRadius: '12px',
-            textDecoration: 'none',
-            fontSize: '15px',
-            display: 'block',
-          }}
-        >
-          Contact Us
-        </a>
+        {/* Drawer Links */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                padding: '12px 16px',
+                borderRadius: '12px',
+                fontSize: '15px',
+                fontWeight: 500,
+                color: drawerTextColor,
+                textDecoration: 'none',
+                borderBottom: drawerBorderItem,
+                display: 'block',
+              }}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+
+        {/* Drawer Action Controls */}
+        <div style={{ paddingTop: '20px', borderTop: drawerBorderItem, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {/* Language Switcher in Drawer */}
+          <button
+            onClick={toggleLanguage}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              width: '100%', padding: '10px', borderRadius: '12px',
+              border: '1px solid rgba(242,121,143,0.3)',
+              backgroundColor: 'rgba(242,121,143,0.08)',
+              color: '#F2798F', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+            }}
+          >
+            <Languages size={15} />
+            <span>{t.nav.switchLang}</span>
+          </button>
+
+          {/* Theme Switcher in Drawer */}
+          <button
+            onClick={toggleTheme}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              width: '100%', padding: '10px', borderRadius: '12px',
+              border: drawerBorderItem,
+              backgroundColor: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+              color: drawerTextColor, fontSize: '13px', fontWeight: 500, cursor: 'pointer',
+            }}
+          >
+            {theme === 'dark' ? <Sun size={15} color="#F2798F" /> : <Moon size={15} color="#590524" />}
+            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
+
+          {/* Contact Button */}
+          <a
+            href="#contact"
+            onClick={() => setIsMenuOpen(false)}
+            style={{
+              display: 'block', textAlign: 'center',
+              width: '100%', padding: '12px', borderRadius: '99px',
+              backgroundColor: '#F2798F', color: '#ffffff',
+              fontWeight: 600, fontSize: '14px', textDecoration: 'none',
+              boxShadow: '0 4px 14px rgba(242,121,143,0.3)',
+            }}
+          >
+            {t.nav.contact}
+          </a>
+        </div>
       </div>
     </>,
     document.body
   );
 
   return (
-    <>
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled ? `${scrolledBg} py-3` : 'bg-transparent py-5'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? scrolledBg : 'bg-transparent py-2'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-          {/* Logo */}
-          <a href="#home" className="flex items-center gap-3 group">
+        {/* Logo */}
+        <a href="#home" className="flex items-center gap-3 group">
+          <div className="w-12 h-12 rounded-full overflow-hidden bg-brand-pink/10 border border-brand-pink/20 p-1 transition-all duration-300 group-hover:scale-105 group-hover:border-brand-pink">
             <img
               src="/assets/logo.png"
               alt="KCFT Logo"
-              className="w-10 h-10 object-contain transition-transform group-hover:scale-105"
+              className="w-full h-full object-cover rounded-full logo-blend"
             />
-            <div className="flex flex-col text-left">
-              <span className={`font-display font-bold text-lg leading-tight tracking-wider transition-colors ${
-                isScrolled && theme === 'dark' ? 'text-white' : 'text-text-primary'
-              }`}>KCFT</span>
-              <span className="text-[10px] text-brand-pink font-light tracking-widest uppercase">Keerthana Creative Foundation Trust</span>
-            </div>
-          </a>
+          </div>
+          <div className="flex flex-col text-left">
+            <span className="font-display font-bold text-xl leading-none text-text-primary tracking-tight">
+              KCFT
+            </span>
+            <span className="text-[10px] text-brand-pink font-medium tracking-wider uppercase mt-1">
+              Keerthana Creative Foundation
+            </span>
+          </div>
+        </a>
 
-          {/* Desktop Links & Actions */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className={`text-sm font-medium transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-pink after:transition-all hover:after:w-full ${
-                  isScrolled && theme === 'dark'
-                    ? 'text-white/90 hover:text-white'
-                    : 'text-text-secondary hover:text-text-primary'
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
-
-            <button
-              onClick={toggleLang}
-              title={lang === 'en' ? 'Switch to Kannada' : 'Switch to English'}
-              className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-white/5 border border-border-primary hover:bg-brand-pink/10 hover:border-brand-pink/40 transition-all focus:outline-none cursor-pointer"
-              aria-label="Toggle Language"
-            >
-              <Languages size={14} className="text-brand-pink" />
-              <span className={`transition-all ${isScrolled && theme === 'dark' ? 'text-white' : 'text-text-primary'}`}>
-                {lang === 'en' ? 'ಕನ್ನಡ' : 'EN'}
-              </span>
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              className="text-text-secondary hover:text-text-primary p-2.5 rounded-xl bg-white/5 border border-border-primary hover:bg-white/10 transition-all focus:outline-none cursor-pointer"
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-brand-magenta" />}
-            </button>
-
+        {/* Desktop Nav Links */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((link) => (
             <a
-              href="#contact"
-              className="bg-brand-pink text-white text-sm font-semibold px-5 py-2 rounded-full border border-brand-pink hover:bg-transparent hover:text-brand-pink transition-all duration-300 shadow-md shadow-brand-pink/20"
+              key={link.name}
+              href={link.href}
+              className="text-sm font-medium text-text-secondary hover:text-brand-pink transition-colors duration-200"
             >
-              Contact Us
+              {link.name}
             </a>
-          </div>
+          ))}
+        </nav>
 
-          {/* Mobile Controls */}
-          <div className="flex items-center gap-2 md:hidden">
-            <button
-              onClick={toggleLang}
-              className="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-white/5 border border-border-primary hover:bg-brand-pink/10 transition-all focus:outline-none cursor-pointer text-text-primary"
-              aria-label="Toggle Language"
-            >
-              {lang === 'en' ? 'ಕನ್ನಡ' : 'EN'}
-            </button>
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          
+          {/* Native Language Switcher Button */}
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer border border-brand-pink/30 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white"
+            title="Switch Language / ಭಾಷೆ ಬದಲಾಯಿಸಿ"
+          >
+            <Languages size={14} />
+            <span>{t.nav.switchLang}</span>
+          </button>
 
-            <button
-              onClick={toggleTheme}
-              className="text-text-secondary hover:text-text-primary p-2 rounded-xl bg-white/5 border border-border-primary transition-all focus:outline-none cursor-pointer"
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-brand-magenta" />}
-            </button>
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full border border-border-primary text-text-secondary hover:text-text-primary hover:border-border-hover transition-all duration-200 cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={18} className="text-brand-pink" /> : <Moon size={18} />}
+          </button>
 
-            <button
-              className="text-text-primary hover:text-brand-pink transition-colors focus:outline-none cursor-pointer"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          {/* CTA */}
+          <a
+            href="#contact"
+            className="bg-brand-pink text-white font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-transparent hover:text-brand-pink border border-brand-pink transition-all duration-300 shadow-md shadow-brand-pink/20"
+          >
+            {t.nav.contact}
+          </a>
         </div>
-      </nav>
 
-      {/* Mobile drawer — rendered via React portal directly into document.body */}
+        {/* Mobile Hamburger Button */}
+        <div className="flex lg:hidden items-center gap-3">
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border border-brand-pink/30 bg-brand-pink/10 text-brand-pink"
+          >
+            <Languages size={13} />
+            <span>{t.nav.switchLang}</span>
+          </button>
+
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 rounded-xl text-text-primary hover:bg-card-hover transition-colors cursor-pointer"
+            aria-label="Toggle Menu"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+
+      </div>
+
+      {/* Render Mobile Drawer */}
       {mobileDrawer}
-    </>
+    </header>
   );
 }
