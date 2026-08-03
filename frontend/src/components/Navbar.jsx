@@ -88,9 +88,11 @@ export default function Navbar() {
         }}
       >
         {/* Drawer Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/assets/logo.png" alt="KCFT Logo" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+            <div style={{ width: '36px', height: '36px', borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(242,121,143,0.4)', backgroundColor: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', shrink: 0 }}>
+              <img src="/assets/logo.png" alt="KCFT Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px', borderRadius: '50%' }} />
+            </div>
             <span style={{ fontWeight: 700, fontSize: '15px', color: drawerTextColor, fontFamily: 'serif' }}>KCFT</span>
           </div>
           <button
@@ -194,11 +196,11 @@ export default function Navbar() {
 
         {/* Logo */}
         <a href="#home" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-full overflow-hidden bg-brand-pink/10 border border-brand-pink/20 p-1 transition-all duration-300 group-hover:scale-105 group-hover:border-brand-pink">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-pink/40 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-brand-pink shrink-0 bg-white flex items-center justify-center">
             <img
               src="/assets/logo.png"
               alt="KCFT Logo"
-              className="w-full h-full object-cover rounded-full logo-blend"
+              className="w-full h-full object-contain p-[2px] rounded-full"
             />
           </div>
           <div className="flex flex-col text-left">
@@ -230,7 +232,7 @@ export default function Navbar() {
           {/* Native Language Switcher Button */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer border border-brand-pink/30 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer border border-brand-pink/30 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white"
             title="Switch Language / ಭಾಷೆ ಬದಲಾಯಿಸಿ"
           >
             <Languages size={14} />
